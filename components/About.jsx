@@ -608,7 +608,7 @@ const About = () => {
                   <button
                     onClick={() =>
                       copyToClipboard(
-                        "+91 12345 67890",
+                        "8522824042",
                         "Phone number copied to clipboard!"
                       )
                     }
