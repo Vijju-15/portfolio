@@ -82,7 +82,7 @@ export default function Home() {
         technologies: 'LLaMA 3, ChromaDB, LangChain, Streamlit',
         purpose: 'Generates context-aware cold emails for B2B sales outreach. It retrieves relevant company data using semantic search, integrates with LLaMA 3 for generation, and offers real-time previews through Streamlit.',
         features: 'Company-specific email generation, semantic search, instant preview UI, modular architecture.',
-        projectImages: ['/coldmail1.jpg', '/coldmail-preview.jpg']
+        projectImages: ['/coldmail_1.jpg']
       }
     },
     {
@@ -94,7 +94,7 @@ export default function Home() {
         technologies: 'Next.js, FastAPI, Kafka, MongoDB, Docker',
         purpose: 'This project enables retail stores to make smarter business decisions using real-time data and AI. It forecasts product demand using Facebook Prophet, adjusts pricing dynamically with XGBoost, and segments customers using K-Means clustering. The system streams live sales and inventory data through Kafka, processes it with FastAPI, and displays actionable insights on an interactive Next.js dashboard. This helps store owners prevent stockouts, maximize revenue, and personalize customer engagement — all in real time.',
         features: 'Sales forecasting with Prophet, dynamic pricing via XGBoost, customer segmentation using K-Means, real-time Kafka pipeline.',
-        projectImages: ['/project1-demo.png', '/project1-dashboard.png']
+        projectImages: ['/retail1.jpg', '/retail2.png']
       }
     },
     {
@@ -273,7 +273,7 @@ export default function Home() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.3 }}
-                        className="grid grid-cols-1 md:grid-cols-2 gap-6"
+                        className="flex gap-6 content-center items-center justify-center"
                       >
                         {activeProject.details.projectImages?.map((imagePath, index) => (
                           <div
@@ -283,15 +283,7 @@ export default function Home() {
                             <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                             <div className="relative bg-slate-900/80 rounded-xl p-4 border border-purple-400/20">
                               <div className="aspect-video bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg flex items-center justify-center border border-purple-500/30">
-                                <div className="text-center space-y-3">
-                                  <div className="w-20 h-20 mx-auto bg-gradient-to-br from-purple-500/30 to-cyan-500/30 rounded-full flex items-center justify-center border border-purple-400/50 shadow-[0_0_20px_rgba(168,85,247,0.4)]">
-                                    <svg className="w-10 h-10 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
-                                  </div>
-                                  <p className="text-sm font-semibold text-purple-300">Project Demo {index + 1}</p>
-                                  <p className="text-xs text-slate-400">Image: {imagePath}</p>
-                                </div>
+                                <img src={imagePath} className="max-w-full max-h-full object-cover rounded-xl" alt={`Project Demo ${index + 1}`} />
                               </div>
                             </div>
                           </div>
