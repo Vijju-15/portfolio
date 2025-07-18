@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>3D Center Object</title>
+  <style>
+    @import url('https://fonts.cdnfonts.com/css/ica-rubrik-black');
+    @import url('https://fonts.cdnfonts.com/css/poppins');
+
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: rgb(0, 0, 0);
+    }
+
+    .banner {
+      width: 100%;
+      height: 100vh;
+      text-align: center;
+      overflow: hidden;
+      position: relative;
+      color: white;
+    }
+
+    .slider {
+      position: absolute;
+      width: 150px;
+      height: 200px;
+      top: 20%;
+      left: calc(50% - 100px);
+      transform-style: preserve-3d;
+      transform: perspective(1000px);
+      animation: autorun 20s linear infinite;
+      z-index: 3;
+    }
+
+    @keyframes autorun {
+      from {
+        transform: perspective(1100px) rotateX(-16deg) rotateY(0deg);
+      }
+      to {
+        transform: perspective(1100px) rotateX(-16deg) rotateY(360deg);
+      }
+    }
+
+    .slider .item {
+      position: absolute;
+      inset: 0;
+      transform:
+        rotateY(calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg))
+        translateZ(400px);
+      z-index: 2;
+    }
+
+    .slider .item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .content {
+      position: absolute;
+      bottom: 0;
+      transform: translateY(-40%);
+      width: min(1400px, 100vw);
+      height: max-content;
+      padding-bottom: 100px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+
+    canvas#threeCanvas {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      height: 300px;
+      z-index: 2;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="banner">
+    
+
+    <div class="slider" style="--quantity: 6">
+      <div class="item" style="--position: 1"><img src="/public/coffee.jpeg" alt="" /></div>
+      <div class="item" style="--position: 2"><img src="/public/coldmail.png" alt="" /></div>
+      <div class="item" style="--position: 3"><img src="/public/leaf.png" alt="" /></div>
+      <div class="item" style="--position: 4"><img src="/public/passwrd.jpg" alt="" /></div>
+      <div class="item" style="--position: 5"><img src="/public/skin.png" alt="" /></div>
+      <div class="item" style="--position: 6"><img src="/public/store.png" alt="" /></div>
+    </div>
+
+    <div class="content"><canvas id="threeCanvas"></canvas></div>
+  </div>
+
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r148/three.min.js"></script>
+<script>
+  const canvas = document.getElementById("threeCanvas");
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setSize(300, 300);
+  renderer.setPixelRatio(window.devicePixelRatio);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+  camera.position.set(0, 0, 6);
+
+  // Glowing base disc under the rotating images
+  const discTexture = new THREE.TextureLoader().load("/mnt/data/23a9ae6d-3972-4be8-ba6c-784c1b05d6e8.png");
+  const discMat = new THREE.MeshBasicMaterial({
+    map: discTexture,
+    transparent: true,
+    opacity: 1,
+    blending: THREE.AdditiveBlending,
+    side: THREE.DoubleSide
+  });
+  const discGeo = new THREE.CircleGeometry(2.5, 64);
+  const disc = new THREE.Mesh(discGeo, discMat);
+  disc.rotation.x = -Math.PI / 2; // lay it flat
+  disc.position.y = -1.2;         // just beneath the rotating items
+  scene.add(disc);
+
+  // Light to help illuminate the disc
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+  scene.add(ambientLight);
+
+  const pointLight = new THREE.PointLight(0xffdd88, 1, 10);
+  pointLight.position.set(0, 2, 3);
+  scene.add(pointLight);
+
+  // Animate
+  function animate() {
+    requestAnimationFrame(animate);
+    disc.rotation.z += 0.002;
+    renderer.render(scene, camera);
+  }
+
+  animate();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,139 @@
+.projects-section {
+  position: relative;
+  height: 100vh;
+  background-image: url('/nebula_space.jpg') center/cover no-repeat;
+  overflow: hidden;
+  box-shadow: 0 0 250px 80px #00ffff40 inset;
+}
+
+.disc-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -40%);
+  pointer-events: none;
+  /* REMOVE animation if you want fixed disc */
+  animation: spin 25s linear infinite;
+  z-index: 1;
+}
+
+@keyframes spin {
+  to {
+    transform: translate(-50%, -40%) rotate(360deg);
+  }
+}
+
+.disc {
+  width: 400px;
+  opacity: 0.8;
+  filter: drop-shadow(0 0 40px #ff9900);
+}
+
+.scroll-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -40%);
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 20px;
+  padding: 0 20px;
+  z-index: 2;
+  width: 90vw;
+}
+
+.scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* 🔥 Gradient Card Style */
+.card {
+  position: relative;
+  width: 220px;
+  height: 320px;
+  background: rgb(60, 61, 61);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+  font-weight: bold;
+  border-radius: 15px;
+  cursor: pointer;
+  color: aliceblue;
+}
+
+.card::before,
+.card::after {
+  position: absolute;
+  content: "";
+  width: 20%;
+  height: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+  font-weight: bold;
+  background-color: rgb(255, 255, 255);
+  transition: all 0.5s;
+}
+
+.card::before {
+  top: 0;
+  right: 0;
+  border-radius: 0 15px 0 100%;
+}
+
+.card::after {
+  bottom: 0;
+  left: 0;
+  border-radius: 0 100%  0 15px;
+}
+
+.card:hover::before,
+.card:hover:after {
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  transition: all 0.5s;
+}
+
+.card:hover:after {
+  content: "HELLO";
+  color: black;
+}
+
+.card-info {
+  background: #0a0a0a;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 12px;
+  border-radius: 0.7rem;
+  z-index: 2;
+  text-align: center;
+  transition: all 0.4s ease-in-out;
+  position: relative;
+}
+
+.card-info p {
+  margin: 0;
+}
+
+.card-info .title {
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+}
+
+.card-info .desc {
+  font-size: 0.7rem;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+
