@@ -1,5 +1,6 @@
 'use client';
 
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Particles from 'react-tsparticles';
