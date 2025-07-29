@@ -12,8 +12,27 @@ import dynamic from 'next/dynamic';
 
 export default function Home() {
   const [activeProject, setActiveProject] = useState(null);
+  const [deviceType, setDeviceType] = useState('desktop');
+  
   const particlesInit = useCallback(async (engine) => {
     await loadSlim(engine);
+  }, []);
+
+  // Device detection for particle optimization
+  useEffect(() => {
+    const checkDevice = () => {
+      if (window.innerWidth <= 768) {
+        setDeviceType('mobile');
+      } else if (window.innerWidth <= 1024) {
+        setDeviceType('tablet');
+      } else {
+        setDeviceType('desktop');
+      }
+    };
+
+    checkDevice();
+    window.addEventListener('resize', checkDevice);
+    return () => window.removeEventListener('resize', checkDevice);
   }, []);
 
   const Certifications = dynamic(() => import('@/components/Certifications'), {
@@ -163,69 +182,106 @@ export default function Home() {
             <FluidText text="Projects" />
           </h2>
 
-          {/* Scroll Buttons */}
-          <div className="flex justify-center gap-4 mb-6">
-            <button
-              onClick={() => document.getElementById('scroll-projects')?.scrollBy({ left: -320, behavior: 'smooth' })}
-              className="bg-blue-600/40 hover:bg-transparent backdrop-blur-md border border-blue-400 text-white p-3 rounded-full transition hover:scale-110 shadow-lg"
-            >
-              ←
-            </button>
-            <button
-              onClick={() => document.getElementById('scroll-projects')?.scrollBy({ left: 320, behavior: 'smooth' })}
-              className="bg-blue-600/40 hover:bg-transparent backdrop-blur-md border border-blue-400 text-white p-3 rounded-full transition hover:scale-110 shadow-lg"
-            >
-              →
-            </button>
-          </div>
+          {/* Mobile: 2-column grid layout */}
+          <div className="block md:hidden">
+            <div className="grid grid-cols-2 gap-4 px-4">
+              {projects.map((project, index) => (
+                <div
+                  key={index}
+                  onClick={() => setActiveProject(project)}
+                  className="relative cursor-pointer group"
+                >
+                  {/* Mobile Card with Individual Glow */}
+                  <div className="relative w-full aspect-[4/5] rounded-2xl p-[2px] bg-black group-hover:scale-105 transition-transform duration-300">
+                    {/* Individual Glow Layer */}
+                    <div className="absolute inset-[-4px] rounded-[20px] z-0 blur-xl opacity-50 bg-gradient-to-br from-blue-400 via-purple-500 to-indigo-600 group-hover:opacity-80 transition-all duration-300 pointer-events-none"></div>
 
-          {/* Card Scroll Container */}
-          <div
-            id="scroll-projects"
-            className="flex gap-14 overflow-x-auto scrollbar-hide p-12"
-          >
-
-            {projects.map((project, index) => (
-              <div
-                key={index}
-                onClick={() => setActiveProject(project)}
-                className="relative min-w-[360px] max-w-[420px] h-[400px] cursor-pointer group"
-              >
-                {/* Glowing Edge Wrapper */}
-                <div className="relative w-full h-full rounded-[20px] p-[2px] bg-black group-hover:scale-105 transition-transform duration-300">
-                  {/* Glow Layer */}
-                  <div className="absolute inset-[-4px] rounded-[24px] z-0 blur-xl opacity-50 bg-gradient-to-br from-blue-400 via-purple-500 to-indigo-600 group-hover:opacity-80 transition-all duration-300 pointer-events-none"></div>
-
-                  {/* Card Inner */}
-                  <div className="relative w-full h-full bg-black rounded-[18px] overflow-hidden z-10 border border-white/10">
-                    <Image src={project.image} alt={project.title} fill className="object-cover" />
-                    <div className="absolute top-3 left-3 bg-black/70 px-3 py-1.5 rounded-md text-sm font-semibold z-10 text-white">
-                      {project.title}
-                    </div>
-                    <div className="absolute inset-0 bg-black/70 text-white opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-center p-4">
-                      <div>
-                        <h3 className="text-lg font-bold mb-2">{project.title}</h3>
-                        <p className="text-sm text-gray-200">{project.description}</p>
-                        <div className="text-blue-400 text-xs mt-2">Click for details</div>
+                    {/* Card Inner */}
+                    <div className="relative w-full h-full bg-black rounded-[16px] overflow-hidden z-10 border border-white/10">
+                      <Image src={project.image} alt={project.title} fill className="object-cover" />
+                      <div className="absolute top-2 left-2 bg-black/70 px-2 py-1 rounded-md text-xs font-semibold z-10 text-white">
+                        {project.title}
+                      </div>
+                      <div className="absolute inset-0 bg-black/70 text-white opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-center p-3">
+                        <div>
+                          <h3 className="text-sm font-bold mb-1">{project.title}</h3>
+                          <p className="text-xs text-gray-200 mb-1">{project.description}</p>
+                          <div className="text-blue-400 text-xs">Click for details</div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-
-            ))}
+              ))}
+            </div>
           </div>
 
-          {/* Fixed Modal */}
-          <AnimatePresence>
-            {activeProject && (
-              <motion.div
-                className="fixed inset-0 bg-black/95 backdrop-blur-3xl z-[9999] flex items-center justify-center p-4"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={handleBackdropClick}
+          {/* Medium & Large: Horizontal scroll layout */}
+          <div className="hidden md:block">
+            {/* Scroll Buttons */}
+            <div className="flex justify-center gap-4 mb-6">
+              <button
+                onClick={() => document.getElementById('scroll-projects')?.scrollBy({ left: -320, behavior: 'smooth' })}
+                className="bg-blue-600/40 hover:bg-transparent backdrop-blur-md border border-blue-400 text-white p-3 rounded-full transition hover:scale-110 shadow-lg"
               >
+                ←
+              </button>
+              <button
+                onClick={() => document.getElementById('scroll-projects')?.scrollBy({ left: 320, behavior: 'smooth' })}
+                className="bg-blue-600/40 hover:bg-transparent backdrop-blur-md border border-blue-400 text-white p-3 rounded-full transition hover:scale-110 shadow-lg"
+              >
+                →
+              </button>
+            </div>
+
+            {/* Card Scroll Container */}
+            <div
+              id="scroll-projects"
+              className="flex gap-14 overflow-x-auto scrollbar-hide p-12"
+            >
+              {projects.map((project, index) => (
+                <div
+                  key={index}
+                  onClick={() => setActiveProject(project)}
+                  className="relative min-w-[360px] max-w-[420px] h-[400px] cursor-pointer group"
+                >
+                  {/* Glowing Edge Wrapper */}
+                  <div className="relative w-full h-full rounded-[20px] p-[2px] bg-black group-hover:scale-105 transition-transform duration-300">
+                    {/* Glow Layer */}
+                    <div className="absolute inset-[-4px] rounded-[24px] z-0 blur-xl opacity-50 bg-gradient-to-br from-blue-400 via-purple-500 to-indigo-600 group-hover:opacity-80 transition-all duration-300 pointer-events-none"></div>
+
+                    {/* Card Inner */}
+                    <div className="relative w-full h-full bg-black rounded-[18px] overflow-hidden z-10 border border-white/10">
+                      <Image src={project.image} alt={project.title} fill className="object-cover" />
+                      <div className="absolute top-3 left-3 bg-black/70 px-3 py-1.5 rounded-md text-sm font-semibold z-10 text-white">
+                        {project.title}
+                      </div>
+                      <div className="absolute inset-0 bg-black/70 text-white opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-center p-4">
+                        <div>
+                          <h3 className="text-lg font-bold mb-2">{project.title}</h3>
+                          <p className="text-sm text-gray-200">{project.description}</p>
+                          <div className="text-blue-400 text-xs mt-2">Click for details</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+
+        {/* Fixed Modal */}
+        <AnimatePresence>
+          {activeProject && (
+            <motion.div
+              className="fixed inset-0 bg-black/95 backdrop-blur-3xl z-[9999] flex items-center justify-center p-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={handleBackdropClick}
+            >
                 <motion.div
                   className="relative w-full max-w-6xl max-h-[90vh] overflow-y-auto"
                   initial={{ scale: 0.8, opacity: 0, y: 50 }}
@@ -394,8 +450,7 @@ export default function Home() {
                 </motion.div>
               </motion.div>
             )}
-          </AnimatePresence>
-        </div>
+        </AnimatePresence>
       </section>
 
 
@@ -427,44 +482,160 @@ export default function Home() {
           }}
           className="absolute top-0 left-0 w-full h-full z-10"
         />
-        <div className="title m-4 p-2 text-center relative z-20">
-          <FluidText text="Skills" />
-        </div>
-        {/* Skills Button Grid */}
-        <div className="relative z-20 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-6 p-6">
-          {[
-            { src: "/html.png", alt: "HTML" },
-            { src: "/css.png", alt: "CSS" },
-            { src: "/js.png", alt: "JavaScript" },
-            { src: "/java.png", alt: "Java" },
-            { src: "/py.png", alt: "Python" },
-            { src: "/react.png", alt: "React.js" },
-            { src: "/node.png", alt: "Node.js" },
-            { src: "/expressjs.png", alt: "Express.js" },
-            { src: "/mongodb.png", alt: "MongoDB" },
-            { src: "/kafka.png", alt: "Kafka" },
-            { src: "/fast.png", alt: "FastAPI" },
-            { src: "/nextjs.png", alt: "Next.js" },
-            { src: "/machine.png", alt: "Machine Learning" },
-            { src: "/deep.png", alt: "Deep Learning" },
-            { src: "/opencv.png", alt: "OpenCV" },
-          ].map((skill, index) => (
-            <div key={index} className="relative flex flex-col items-center justify-center ">
-              <button type="button" className="btn">
-                <img src={skill.src} alt={skill.alt} className="icon" />
 
-                <div id="container-stars">
-                  <div id="stars"></div>
-                </div>
+        <div className="relative z-20 w-full flex flex-col items-center justify-center pt-16 md:pt-0">
+          <div className="title m-4 p-2 text-center mb-8 md:mb-4">
+            <FluidText text="Skills" />
+          </div>
 
-                <div id="glow">
-                  <div className="circle"></div>
-                  <div className="circle"></div>
+          {/* Mobile Layout - Elegant Scrollable Container */}
+          <div className="block md:hidden w-full px-4 mt-8">
+            {/* Mobile Skills Container with True Space-themed Gradient */}
+            <div className="relative bg-gradient-to-br from-black/80 via-blue-950/40 to-black/90 backdrop-blur-xl rounded-3xl border border-blue-200/20 p-6 mx-2 shadow-2xl shadow-blue-500/10">
+              {/* Galaxy gradient overlay for cosmic effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-blue-800/15 to-black/30 rounded-3xl pointer-events-none"></div>
+              
+              {/* Starfield-like gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-transparent via-blue-400/5 via-white/3 to-blue-900/10 rounded-3xl pointer-events-none"></div>
+              
+              {/* Deep space effect overlay */}
+              <div className="absolute inset-0 opacity-40 rounded-3xl pointer-events-none" style={{
+                background: `radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                           radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+                           radial-gradient(circle at 40% 70%, rgba(30, 64, 175, 0.12) 0%, transparent 50%),
+                           radial-gradient(circle at 90% 90%, rgba(147, 197, 253, 0.1) 0%, transparent 50%)`
+              }}></div>
+              
+              {/* Scrollable Skills Grid - Made taller */}
+              <div className="relative max-h-[28rem] overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-blue-300/30 hover:scrollbar-thumb-blue-300/50 pr-2">
+                <div className="grid grid-cols-2 gap-6 pb-6">
+                  {[
+                    { src: "/html.png", alt: "HTML" },
+                    { src: "/css.png", alt: "CSS" },
+                    { src: "/js.png", alt: "JavaScript" },
+                    { src: "/java.png", alt: "Java" },
+                    { src: "/py.png", alt: "Python" },
+                    { src: "/react.png", alt: "React.js" },
+                    { src: "/node.png", alt: "Node.js" },
+                    { src: "/expressjs.png", alt: "Express.js" },
+                    { src: "/mongodb.png", alt: "MongoDB" },
+                    { src: "/kafka.png", alt: "Kafka" },
+                    { src: "/fast.png", alt: "FastAPI" },
+                    { src: "/nextjs.png", alt: "Next.js" },
+                    { src: "/machine.png", alt: "Machine Learning" },
+                    { src: "/deep.png", alt: "Deep Learning" },
+                    { src: "/opencv.png", alt: "OpenCV" },
+                  ].map((skill, index) => (
+                    <div key={index} className="relative flex flex-col items-center justify-center group py-4">
+                      {/* Skill Card Background with space theme */}
+                      <div className="relative bg-gradient-to-br from-black/60 via-blue-950/30 to-black/80 backdrop-blur-lg rounded-2xl p-5 w-full border border-blue-200/20 group-hover:border-blue-300/40 transition-all duration-300 hover:bg-gradient-to-br hover:from-black/70 hover:via-blue-900/40 hover:to-black/90 shadow-lg shadow-blue-500/10">
+                        {/* Space glow effect on hover */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-400/8 via-white/5 to-blue-600/8 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        
+                        {/* Skill Icon */}
+                        <div className="relative flex justify-center mb-4">
+                          <button type="button" className="btn w-16 h-16 group-hover:scale-110 transition-transform duration-300">
+                            <img src={skill.src} alt={skill.alt} className="icon w-9 h-9" />
+                            <div id="container-stars">
+                              <div id="stars"></div>
+                            </div>
+                            <div id="glow">
+                              <div className="circle"></div>
+                              <div className="circle"></div>
+                            </div>
+                          </button>
+                        </div>
+                        
+                        {/* Skill Name */}
+                        <div className='text-center text-blue-100 text-sm font-medium group-hover:text-white transition-colors duration-300'>
+                          <FluidTextother text={skill.alt} />
+                        </div>
+                      </div>
+
+                      {/* Floating space particles on hover */}
+                      <div className="absolute inset-0 pointer-events-none">
+                        {Array.from({ length: 4 }, (_, i) => (
+                          <div
+                            key={i}
+                            className="absolute w-1.5 h-1.5 bg-gradient-to-r from-blue-300 to-white rounded-full opacity-0 group-hover:opacity-80 animate-pulse"
+                            style={{
+                              left: `${Math.random() * 100}%`,
+                              top: `${Math.random() * 100}%`,
+                              animationDelay: `${i * 0.4}s`,
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </button>
-              <div className='text-center text-blue-500'><FluidTextother text={skill.alt} /></div>
+              </div>
+
+              {/* Enhanced Scroll Indicator with space theme */}
+              <div className="absolute bottom-3 right-3 text-blue-200/60 text-xs animate-bounce flex items-center gap-1">
+                <div className="w-1 h-1 bg-blue-300 rounded-full animate-pulse"></div>
+                ↕ Scroll
+                <div className="w-1 h-1 bg-white rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+              </div>
+
+              {/* Enhanced decorative space elements */}
+              <div className="absolute top-3 left-3 w-2.5 h-2.5 bg-gradient-to-r from-blue-300 to-white rounded-full opacity-70 animate-pulse"></div>
+              <div className="absolute top-3 right-3 w-2.5 h-2.5 bg-gradient-to-r from-white to-blue-400 rounded-full opacity-70 animate-pulse" style={{ animationDelay: '0.7s' }}></div>
+              <div className="absolute bottom-3 left-3 w-2.5 h-2.5 bg-gradient-to-r from-blue-500 to-blue-200 rounded-full opacity-70 animate-pulse" style={{ animationDelay: '1.2s' }}></div>
+              
+              {/* Additional starlike sparkles */}
+              <div className="absolute top-1/4 left-1/4 w-1 h-1 bg-white rounded-full opacity-60 animate-ping" style={{ animationDelay: '2s' }}></div>
+              <div className="absolute top-3/4 right-1/4 w-1 h-1 bg-blue-200 rounded-full opacity-60 animate-ping" style={{ animationDelay: '3s' }}></div>
             </div>
-          ))}
+
+            {/* Enhanced Mobile Skills Counter with space theme */}
+            <div className="text-center mt-6 text-blue-200/80 text-sm">
+              <span className="bg-gradient-to-r from-black/60 via-blue-950/40 to-black/60 backdrop-blur-lg px-4 py-2 rounded-full border border-blue-200/30 shadow-lg shadow-blue-500/20">
+                ⭐ 15 Skills Mastered ⭐
+              </span>
+            </div>
+          </div>
+
+          {/* Medium & Large Screens - 5x3 Grid Layout */}
+          <div className="hidden md:block">
+            <div className="grid grid-cols-5 gap-8 p-6">
+              {[
+                { src: "/html.png", alt: "HTML" },
+                { src: "/css.png", alt: "CSS" },
+                { src: "/js.png", alt: "JavaScript" },
+                { src: "/java.png", alt: "Java" },
+                { src: "/py.png", alt: "Python" },
+                { src: "/react.png", alt: "React.js" },
+                { src: "/node.png", alt: "Node.js" },
+                { src: "/expressjs.png", alt: "Express.js" },
+                { src: "/mongodb.png", alt: "MongoDB" },
+                { src: "/kafka.png", alt: "Kafka" },
+                { src: "/fast.png", alt: "FastAPI" },
+                { src: "/nextjs.png", alt: "Next.js" },
+                { src: "/machine.png", alt: "Machine Learning" },
+                { src: "/deep.png", alt: "Deep Learning" },
+                { src: "/opencv.png", alt: "OpenCV" },
+              ].map((skill, index) => (
+                <div key={index} className="relative flex flex-col items-center justify-center">
+                  <button type="button" className="btn">
+                    <img src={skill.src} alt={skill.alt} className="icon" />
+
+                    <div id="container-stars">
+                      <div id="stars"></div>
+                    </div>
+
+                    <div id="glow">
+                      <div className="circle"></div>
+                      <div className="circle"></div>
+                    </div>
+                  </button>
+                  <div className='text-center text-blue-500'>
+                    <FluidTextother text={skill.alt} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -551,18 +722,18 @@ function FluidTextother({ text }) {
     <motion.div
       ref={textRef}
       className="text-lg md:text-xl font-bold relative p-2 select-none transition-all duration-300"
-      style={{ color: 'aquamarine' }}
+      style={{ color: '#dbeafe' }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 1 }}
       onMouseEnter={() => {
         textRef.current.style.color = 'transparent';
-        textRef.current.style.WebkitTextStroke = '1px aquamarine';
+        textRef.current.style.WebkitTextStroke = '1px #dbeafe';
         textRef.current.style.background = `radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.25) 0%, transparent 60%)`;
         textRef.current.style.WebkitBackgroundClip = 'text';
       }}
       onMouseLeave={() => {
-        textRef.current.style.color = 'aquamarine';
+        textRef.current.style.color = '#dbeafe';
         textRef.current.style.WebkitTextStroke = '0px transparent';
         textRef.current.style.background = 'none';
         textRef.current.style.WebkitBackgroundClip = 'unset';

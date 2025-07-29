@@ -117,9 +117,9 @@ export default function EducationSection() {
       />
 
       {/* 📚 Main Content */}
-      <div className="relative z-20 px-6 py-20 max-w-6xl mx-auto">
+      <div className="relative z-20 px-4 sm:px-6 py-12 sm:py-20 max-w-4xl mx-auto">
         <motion.h2
-          className="text-5xl font-bold text-center mb-16 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent"
+          className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-8 sm:mb-12 md:mb-16 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent"
           initial={{ opacity: 0, y: -50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
@@ -127,7 +127,7 @@ export default function EducationSection() {
           <FluidText text="Education" />
         </motion.h2>
 
-        <div className="flex flex-col gap-20 items-center justify-center">
+        <div className="flex flex-col gap-8 sm:gap-12 md:gap-16 lg:gap-20 items-center justify-center">
           {educationData.map((item, index) => (
             <motion.div
               key={index}
@@ -135,21 +135,21 @@ export default function EducationSection() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.2 }}
               whileHover={{ scale: 1.03 }}
-              className="bg-[#111] p-8 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-[0_0_40px_#6366f1aa] w-3xl"
+              className="bg-gradient-to-br from-gray-900/50 via-blue-900/20 to-purple-900/20 backdrop-blur-xl p-6 sm:p-8 rounded-2xl shadow-2xl transition-all duration-300 hover:shadow-[0_0_40px_#6366f1aa] border border-gray-700/30 hover:border-blue-500/50 w-full max-w-2xl"
             >
-              <div className="flex justify-between items-start mb-4">
-                <div className="p-3 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full shadow-lg ring-2 ring-white/10">
+              <div className="flex justify-between items-start mb-4 sm:mb-6">
+                <div className="p-3 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full shadow-lg ring-2 ring-white/20 hover:ring-blue-400/50 transition-all duration-300">
                   {item.icon}
                 </div>
-                <div className="text-sm text-gray-400 font-medium">
+                <div className="text-xs sm:text-sm text-cyan-400 font-medium bg-blue-900/30 px-3 py-1 rounded-full border border-blue-500/30">
                   {item.year}
                 </div>
               </div>
-              <h3 className="text-xl font-bold mb-1">{item.title}</h3>
-              <h4 className="text-blue-400 font-semibold mb-2">
+              <h3 className="text-lg sm:text-xl font-bold mb-2 text-white">{item.title}</h3>
+              <h4 className="text-blue-400 font-semibold mb-3 text-sm sm:text-base">
                 {item.institution}
               </h4>
-              <p className="text-gray-300 text-sm leading-relaxed">
+              <p className="text-gray-200 text-sm sm:text-base leading-relaxed">
                 {item.description}
               </p>
             </motion.div>

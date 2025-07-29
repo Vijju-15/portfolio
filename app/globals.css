@@ -1,15 +1,103 @@
 @import "tailwindcss";
+@import "../styles/responsive.css";
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+html, body {
+  scroll-behavior: auto;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+/* Responsive base settings */
+* {
+  box-sizing: border-box;
+}
+
+/* Responsive container classes */
+.responsive-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .responsive-container {
+    padding: 0 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-container {
+    padding: 0 3rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .responsive-container {
+    padding: 0 4rem;
+  }
+}
+
+/* Responsive text scaling */
+.responsive-text-xs { font-size: 0.75rem; line-height: 1rem; }
+.responsive-text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+.responsive-text-base { font-size: 1rem; line-height: 1.5rem; }
+.responsive-text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+.responsive-text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+.responsive-text-2xl { font-size: 1.5rem; line-height: 2rem; }
+.responsive-text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+.responsive-text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+.responsive-text-5xl { font-size: 3rem; line-height: 1; }
+.responsive-text-6xl { font-size: 3.75rem; line-height: 1; }
+
+@media (min-width: 640px) {
+  .responsive-text-xl { font-size: 1.5rem; line-height: 2rem; }
+  .responsive-text-2xl { font-size: 1.875rem; line-height: 2.25rem; }
+  .responsive-text-3xl { font-size: 2.25rem; line-height: 2.5rem; }
+  .responsive-text-4xl { font-size: 3rem; line-height: 1; }
+  .responsive-text-5xl { font-size: 4rem; line-height: 1; }
+  .responsive-text-6xl { font-size: 5rem; line-height: 1; }
+}
+
+@media (min-width: 1024px) {
+  .responsive-text-4xl { font-size: 3.75rem; line-height: 1; }
+  .responsive-text-5xl { font-size: 4.5rem; line-height: 1; }
+  .responsive-text-6xl { font-size: 6rem; line-height: 1; }
+}
+
+/* Responsive spacing utilities */
+.responsive-py-sm { padding-top: 1rem; padding-bottom: 1rem; }
+.responsive-py-md { padding-top: 2rem; padding-bottom: 2rem; }
+.responsive-py-lg { padding-top: 3rem; padding-bottom: 3rem; }
+.responsive-py-xl { padding-top: 4rem; padding-bottom: 4rem; }
+
+@media (min-width: 640px) {
+  .responsive-py-sm { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+  .responsive-py-md { padding-top: 3rem; padding-bottom: 3rem; }
+  .responsive-py-lg { padding-top: 4rem; padding-bottom: 4rem; }
+  .responsive-py-xl { padding-top: 6rem; padding-bottom: 6rem; }
+}
+
+@media (min-width: 1024px) {
+  .responsive-py-md { padding-top: 4rem; padding-bottom: 4rem; }
+  .responsive-py-lg { padding-top: 6rem; padding-bottom: 6rem; }
+  .responsive-py-xl { padding-top: 8rem; padding-bottom: 8rem; }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -447,6 +535,72 @@ a:focus-visible {
   background-size: 300% 300%;
   animation: border-spin 4s linear infinite;
 }
+
+/* Custom twinkle animation for floating particles */
+@keyframes twinkle {
+  0%, 100% { 
+    opacity: 0.2; 
+    transform: scale(1); 
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1.5); 
+  }
+}
+
+.animate-twinkle {
+  animation: twinkle 2s ease-in-out infinite;
+}
+
+/* Enhanced glass morphism effects for certifications */
+:root {
+  --glass-opacity-mobile: 0.08;
+  --glass-opacity-tablet: 0.06;
+  --glass-opacity-desktop: 0.05;
+  --glass-blur-mobile: 8px;
+  --glass-blur-tablet: 12px;
+  --glass-blur-desktop: 10px;
+  --glass-border-mobile: 0.15;
+  --glass-border-tablet: 0.12;
+  --glass-border-desktop: 0.1;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, var(--glass-opacity-desktop));
+  backdrop-filter: blur(var(--glass-blur-desktop));
+  -webkit-backdrop-filter: blur(var(--glass-blur-desktop));
+  border: 1px solid rgba(255, 255, 255, var(--glass-border-desktop));
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+@media (max-width: 768px) {
+  .glass-card {
+    background: rgba(255, 255, 255, var(--glass-opacity-mobile));
+    backdrop-filter: blur(var(--glass-blur-mobile));
+    -webkit-backdrop-filter: blur(var(--glass-blur-mobile));
+    border: 1px solid rgba(255, 255, 255, var(--glass-border-mobile));
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .glass-card {
+    background: rgba(255, 255, 255, var(--glass-opacity-tablet));
+    backdrop-filter: blur(var(--glass-blur-tablet));
+    -webkit-backdrop-filter: blur(var(--glass-blur-tablet));
+    border: 1px solid rgba(255, 255, 255, var(--glass-border-tablet));
+  }
+}
+
+/* Perspective for 3D effects */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-gpu {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
 .ml-4 { 
   margin-left: 1rem; 
 }

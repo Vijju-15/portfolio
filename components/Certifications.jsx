@@ -80,7 +80,7 @@ function MovingStars() {
     // Create stars
     const createStars = () => {
       const stars = [];
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < 30; i++) {
         const star = document.createElement('div');
         star.className = 'absolute bg-white rounded-full opacity-60';
         star.style.width = `${Math.random() * 3 + 1}px`;
